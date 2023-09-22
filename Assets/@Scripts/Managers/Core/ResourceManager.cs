@@ -62,6 +62,17 @@ public class ResourceManager {
         var asyncOperation = Addressables.LoadAssetAsync<T>(loadKey);
         asyncOperation.Completed += (op) =>
         {
+            if (op.Result is Texture2D texture)
+            {
+                // Texture2D를 Sprite로 변환합니다.
+                Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+
+                // 리소스에 스프라이트를 추가하고 콜백을 호출합니다.
+                _resources.Add(key, sprite);
+                callback.Invoke(sprite as T);
+                return;
+            }
+
             _resources.Add(key, op.Result);
             callback?.Invoke(op.Result);
         };

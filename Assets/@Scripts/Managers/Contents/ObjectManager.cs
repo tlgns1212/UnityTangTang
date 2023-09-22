@@ -8,6 +8,7 @@ public class ObjectManager
     public PlayerController Player { get; private set; }
     public HashSet<MonsterController> Monsters { get; } = new HashSet<MonsterController>();
     public HashSet<ProjectileController> Projectiles{ get; } = new HashSet<ProjectileController>();
+    public HashSet<GemController> Gems{ get; } = new HashSet<GemController>();
     
     public T Spawn<T>(Vector3 position, int templateID = 0) where T : BaseController
     {
@@ -22,6 +23,7 @@ public class ObjectManager
 
             PlayerController pc= go.GetOrAddComponent<PlayerController>();
             Player = pc;
+            pc.Init();
 
             return pc as T;
         }
@@ -33,13 +35,27 @@ public class ObjectManager
 
             MonsterController mc = go.GetOrAddComponent<MonsterController>();
             Monsters.Add(mc);
+            mc.Init();
 
             return mc as T;
         }
         else if(type == typeof(GemController))
         {
-            Managers.Resource.Instantiate(Define.ExpGetRate)
-            return null;
+            GameObject go = Managers.Resource.Instantiate(Define.EXP_GEM_PREFAB, pooling: true);
+            go.transform.position = position;
+
+            GemController gc = go.GetOrAddComponent<GemController>();
+            Gems.Add(gc);
+            gc.Init();
+
+            string key = Random.Range(0, 2) == 0 ? "EXPGem_01.sprite" : "EXPGem_02.sprite";
+            Sprite sprite = Managers.Resource.Load<Sprite>(key);
+            go.GetComponent<SpriteRenderer>().sprite = sprite;
+
+            //TEMP
+            GameObject.Find("@Grid").GetComponent<GridController>().Add(go);
+
+            return gc as T;
         }
 
         return null;
@@ -62,6 +78,14 @@ public class ObjectManager
         {
             Projectiles.Remove(obj as ProjectileController);
             Managers.Resource.Destroy(obj.gameObject);
+        }
+        else if(type == typeof(GemController))
+        {
+            Gems.Remove(obj as GemController);
+            Managers.Resource.Destroy(obj.gameObject);
+
+            //TEMP
+            GameObject.Find("@Grid").GetComponent<GridController>().Remove(obj.gameObject);
         }
     }
 }

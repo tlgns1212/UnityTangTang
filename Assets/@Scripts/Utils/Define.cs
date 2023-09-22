@@ -25,6 +25,6 @@ public class Define
         Env,
     }
 
-    const int PLAYER_DATA_ID = 1;
-    const string EXP_GEM_PREFAB  = "EXPGem.prefab";
+    public const int PLAYER_DATA_ID = 1;
+    public const string EXP_GEM_PREFAB  = "EXPGem.prefab";
     }

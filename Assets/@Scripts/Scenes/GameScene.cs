@@ -23,12 +23,12 @@ public class GameScene : MonoBehaviour
     {
         _spawningPool = gameObject.AddComponent<SpawningPool>();
 
-        var player = Managers.Object.Spawn<PlayerController>();
+        var player = Managers.Object.Spawn<PlayerController>(Vector3.zero);
 
         for (int i = 0; i < 10; i++)
         {
-            MonsterController mc = Managers.Object.Spawn<MonsterController>(Random.Range(0, 2));
-            mc.transform.position = new Vector2(Random.Range(-5, 5), Random.Range(-5, 5));
+            Vector3 randPos = new Vector2(Random.Range(-5, 5), Random.Range(-5, 5));
+            MonsterController mc = Managers.Object.Spawn<MonsterController>(randPos,Random.Range(0, 2));
         }
         var joystick = Managers.Resource.Instantiate("UI_Joystick.prefab");
         joystick.name = "@UI_Joystick";
