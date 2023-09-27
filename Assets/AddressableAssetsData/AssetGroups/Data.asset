@@ -23,6 +23,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - PreLoad
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e6406bda6fb6aaa4483f719fc9bd9e09
+    m_Address: SkillData.xml
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PreLoad
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: aea8ac16df29df645ac9ab2029baab34, type: 2}
   m_SchemaSet:

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SkillDatas>
+	<SkillData templateID="1" name="화염구" type="Projectile" prefab="FireProjectile.prefab" damage="1000" speed="2">
+	</SkillData>
+	
+	<!--<SkillData templateID="1" name="fireballStrID" type="projectile" prefab="FirePorjectile.prefab" damage="1000">
+		<ProjectileData speed="3" damage="10" hitCount="1">
+			<OnHit>
+				<HitEffect type="buff" buffType="12" templateID ="30"></HitEffect>
+			</OnHit>
+		</ProjectileData>
+		<SpawnData>
+			
+		</SpawnData>
+	</SkillData>
+
+	<SkillData templateID="11" nextID="12" name="meleeBaseStrID" type="melee" prefab="" damage="1000">
+	</SkillData>
+	<SkillData templateID="12" nextID="13" name="meleeBaseStrID" type="melee" prefab="" damage="1000">
+	</SkillData>
+	<SkillData templateID="13" nextID="14" name="meleeBaseStrID" type="melee" prefab="" damage="1000">
+	</SkillData>-->
+</SkillDatas>

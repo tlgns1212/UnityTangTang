@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class ObjectManager
 {
@@ -57,12 +58,28 @@ public class ObjectManager
 
             return gc as T;
         }
+        else if(typeof(T).IsSubclassOf(typeof(ProjectileController)))
+        {
+            GameObject go = Managers.Resource.Instantiate("FireProjectile.prefab", pooling: true);
+            go.transform.position = position;
+
+            ProjectileController pc = go.GetOrAddComponent<ProjectileController>();
+            Projectiles.Add(pc);
+            pc.Init();
+
+            return pc as T;
+        }
 
         return null;
     }
 
     public void Despawn<T>(T obj) where T : BaseController
     {
+        if(obj.IsValid() == false)
+        {
+            int a = 3;
+        }
+
         System.Type type = typeof(T);
 
         if(type == typeof(PlayerController))
@@ -74,11 +91,6 @@ public class ObjectManager
             Monsters.Remove(obj as MonsterController);
             Managers.Resource.Destroy(obj.gameObject);
         }
-        else if (type == typeof(ProjectileController))
-        {
-            Projectiles.Remove(obj as ProjectileController);
-            Managers.Resource.Destroy(obj.gameObject);
-        }
         else if(type == typeof(GemController))
         {
             Gems.Remove(obj as GemController);
@@ -86,6 +98,11 @@ public class ObjectManager
 
             //TEMP
             GameObject.Find("@Grid").GetComponent<GridController>().Remove(obj.gameObject);
+        }
+        else if (typeof(T).IsSubclassOf(typeof(ProjectileController)))
+        {
+            Projectiles.Remove(obj as ProjectileController);
+            Managers.Resource.Destroy(obj.gameObject);
         }
     }
 }

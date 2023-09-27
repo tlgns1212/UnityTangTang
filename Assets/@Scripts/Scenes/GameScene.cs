@@ -21,6 +21,9 @@ public class GameScene : MonoBehaviour
 
     void StartLoaded()
     {
+        //Data Text
+        Managers.Data.Init();
+
         _spawningPool = gameObject.AddComponent<SpawningPool>();
 
         var player = Managers.Object.Spawn<PlayerController>(Vector3.zero);
@@ -37,9 +40,6 @@ public class GameScene : MonoBehaviour
         var map = Managers.Resource.Instantiate("Map.prefab");
         map.name = "@Map";
         Camera.main.GetComponent<CameraController>().Target = player.gameObject;
-
-        //Data Text
-        Managers.Data.Init();
 
         foreach (var playerData in Managers.Data.PlayerDic.Values)
         {
