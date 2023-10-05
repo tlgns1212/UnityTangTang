@@ -32,7 +32,9 @@ public class MonsterController : CreatureController
     private void OnCollisionEnter2D(Collision2D collision)
     {
         PlayerController target = collision.gameObject.GetComponent<PlayerController>();
-        if (target == null)
+        if (target.IsValid() == false)
+            return;
+        if (this.IsValid() == false)
             return;
 
         if (_coDotDamage != null)
@@ -43,9 +45,9 @@ public class MonsterController : CreatureController
     public void OnCollisionExit2D(Collision2D collision)
     {
         PlayerController target = collision.gameObject.GetComponent<PlayerController>();
-        if (target == null)
+        if (target.IsValid() == false)
             return;
-        if (target.isActiveAndEnabled == false)
+        if (this.IsValid() == false)
             return;
 
         if (_coDotDamage != null)
@@ -67,6 +69,9 @@ public class MonsterController : CreatureController
     protected override void OnDead()
     {
         base.OnDead();
+
+        Managers.Game.KillCount++;
+
 
         if (_coDotDamage != null)
             StopCoroutine(_coDotDamage);

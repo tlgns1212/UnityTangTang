@@ -58,7 +58,8 @@ public class ObjectManager
 
             return gc as T;
         }
-        else if(typeof(T).IsSubclassOf(typeof(ProjectileController)))
+        //else if(typeof(T).IsSubclassOf(typeof(ProjectileController)))
+        else if(type == typeof(ProjectileController))
         {
             GameObject go = Managers.Resource.Instantiate("FireProjectile.prefab", pooling: true);
             go.transform.position = position;
@@ -69,6 +70,22 @@ public class ObjectManager
 
             return pc as T;
         }
+        else if (typeof(T).IsSubclassOf(typeof(SkillController)))
+        {
+            if(Managers.Data.SkillDic.TryGetValue(templateID,out Data.SkillData skillData) == false)
+            {
+                Debug.LogError($"ObjectMAnager Spawn Skill Failed {templateID}");
+                return null;
+            }
+
+            GameObject go = Managers.Resource.Instantiate(skillData.prefab, pooling: true);
+            go.transform.position = position;
+
+            T t = go.GetOrAddComponent<T>();
+            t.Init();
+
+            return t;
+        }
 
         return null;
     }
@@ -77,7 +94,6 @@ public class ObjectManager
     {
         if(obj.IsValid() == false)
         {
-            int a = 3;
         }
 
         System.Type type = typeof(T);
@@ -99,7 +115,8 @@ public class ObjectManager
             //TEMP
             GameObject.Find("@Grid").GetComponent<GridController>().Remove(obj.gameObject);
         }
-        else if (typeof(T).IsSubclassOf(typeof(ProjectileController)))
+        //else if (typeof(T).IsSubclassOf(typeof(ProjectileController)))
+        else if (type == typeof(ProjectileController))
         {
             Projectiles.Remove(obj as ProjectileController);
             Managers.Resource.Destroy(obj.gameObject);
