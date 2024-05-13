@@ -19,6 +19,29 @@ public class GameScene : MonoBehaviour
 
     SpawningPool _spawningPool;
 
+    Define.StageType _stageType;
+    public Define.StageType StageType
+    {
+        get { return _stageType; }
+        set
+        {
+            _stageType = value;
+
+            if (_spawningPool != null)
+            {
+                switch (value)
+                {
+                    case Define.StageType.Normal:
+                        _spawningPool.Stopped = false;
+                        break;
+                    case Define.StageType.Boss:
+                        _spawningPool.Stopped = true;
+                        break;
+                }
+            }
+        }
+    }
+
     void StartLoaded()
     {
         //Data Text
@@ -33,7 +56,7 @@ public class GameScene : MonoBehaviour
         for (int i = 0; i < 10; i++)
         {
             Vector3 randPos = new Vector2(Random.Range(-5, 5), Random.Range(-5, 5));
-            MonsterController mc = Managers.Object.Spawn<MonsterController>(randPos,Random.Range(0, 2));
+            MonsterController mc = Managers.Object.Spawn<MonsterController>(randPos, 1 + Random.Range(0, 2));
         }
         var joystick = Managers.Resource.Instantiate("UI_Joystick.prefab");
         joystick.name = "@UI_Joystick";
@@ -76,9 +99,16 @@ public class GameScene : MonoBehaviour
     {
         Managers.UI.GetSceneUI<UI_GameScene>().SetKillCount(killCount);
 
-        if(killCount == 5)
+        if (killCount == 40)
         {
             // Boss
+            StageType = Define.StageType.Boss;
+
+            Managers.Object.DespawnAllMonsters();
+
+            Vector2 spawnPos = Utils.GenerateMonsterSpawnPosition(Managers.Game.Player.transform.position, 5, 10);
+
+            Managers.Object.Spawn<MonsterController>(spawnPos, Define.BOSS_ID);
         }
     }
 

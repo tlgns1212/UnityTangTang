@@ -4,35 +4,36 @@ using UnityEngine;
 
 public class CreatureController : BaseController
 {
-    // 나한테 걸어준 버프 목록
-
     protected float _speed = 1.0f;
 
     public int HP { get; set; } = 100;
     public int MaxHP { get; set; } = 100;
 
-    void Start()
+    public SkillBook Skills { get; protected set; }
+    public override bool Init()
     {
-        
-    }
+        base.Init();
 
-    void Update()
-    {
-        
+        Skills = gameObject.GetOrAddComponent<SkillBook>();
+
+        return true;
     }
 
     public virtual void OnDamaged(BaseController attacker, int damage)
     {
+        if (HP <= 0)
+            return;
+
         HP -= damage;
-        if(HP < 0)
+        if (HP <= 0)
         {
             HP = 0;
             OnDead();
         }
     }
 
-    protected virtual void OnDead() 
+    protected virtual void OnDead()
     {
-        
+
     }
 }

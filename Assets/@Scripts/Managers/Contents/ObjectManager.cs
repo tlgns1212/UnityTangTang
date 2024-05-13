@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -30,7 +31,20 @@ public class ObjectManager
         }
         else if(type == typeof(MonsterController))
         {
-            string name = (templateID == 0 ? "Goblin_01" : "Snake_01");
+            string name = "";
+            switch (templateID)
+            {
+                case Define.GOBLIN_ID:
+                    name = "Goblin_01";
+                    break;
+                case Define.SNAKE_ID:
+                    name = "Snake_01";
+                    break;
+                case Define.BOSS_ID:
+                    name = "Boss_01";
+                    break;
+            }
+
             GameObject go = Managers.Resource.Instantiate(name + ".prefab", pooling: true);
             go.transform.position = position;
 
@@ -70,7 +84,7 @@ public class ObjectManager
 
             return pc as T;
         }
-        else if (typeof(T).IsSubclassOf(typeof(SkillController)))
+        else if (typeof(T).IsSubclassOf(typeof(SkillBase)))
         {
             if(Managers.Data.SkillDic.TryGetValue(templateID,out Data.SkillData skillData) == false)
             {
@@ -94,6 +108,7 @@ public class ObjectManager
     {
         if(obj.IsValid() == false)
         {
+            return;
         }
 
         System.Type type = typeof(T);
@@ -120,6 +135,16 @@ public class ObjectManager
         {
             Projectiles.Remove(obj as ProjectileController);
             Managers.Resource.Destroy(obj.gameObject);
+        }
+    }
+
+    public void DespawnAllMonsters()
+    {
+        var monsters = Monsters.ToList();
+
+        foreach(var monster in monsters)
+        {
+            Despawn<MonsterController>(monster);
         }
     }
 }

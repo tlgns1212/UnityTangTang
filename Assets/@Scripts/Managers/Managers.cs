@@ -25,20 +25,20 @@ public class Managers : MonoBehaviour
     public static DataManager Data { get { return Instance?._data; } }
     public static ResourceManager Resource { get { return Instance?._resource; } }
     public static SceneManagerEx Scene { get { return Instance?._scene; } }
-    public static SoundManager Sound{ get { return Instance?._sound; } }
-    public static UIManager UI{ get { return Instance?._ui; } }
+    public static SoundManager Sound { get { return Instance?._sound; } }
+    public static UIManager UI { get { return Instance?._ui; } }
     #endregion
 
     public static Managers Instance
     {
         get
         {
-            if(s_init == false)
+            if (s_init == false)
             {
                 s_init = true;
 
                 GameObject go = GameObject.Find("@Managers");
-                if(go == null)
+                if (go == null)
                 {
                     go = new GameObject() { name = "@Managers" };
                     go.AddComponent<Managers>();

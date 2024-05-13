@@ -12,7 +12,7 @@ public class GridController : BaseController
 {
     UnityEngine.Grid _grid;
 
-    Dictionary<Vector3Int, Cell> _cells = new Dictionary<Vector3Int,Cell>();
+    Dictionary<Vector3Int, Cell> _cells = new Dictionary<Vector3Int, Cell>();
 
     public override bool Init()
     {
@@ -25,7 +25,7 @@ public class GridController : BaseController
 
     public void Add(GameObject go)
     {
-        Vector3Int cellPos =  _grid.WorldToCell(go.transform.position);
+        Vector3Int cellPos = _grid.WorldToCell(go.transform.position);
 
         Cell cell = GetCell(cellPos);
         if (cell == null)
@@ -49,7 +49,7 @@ public class GridController : BaseController
     {
         Cell cell = null;
 
-        if(_cells.TryGetValue(cellPos, out cell) == false)
+        if (_cells.TryGetValue(cellPos, out cell) == false)
         {
             cell = new Cell();
             _cells.Add(cellPos, cell);
@@ -62,19 +62,19 @@ public class GridController : BaseController
     {
         List<GameObject> objects = new List<GameObject>();
 
-        Vector3Int left =  _grid.WorldToCell(pos + new Vector3(-range, 0));
-        Vector3Int right=  _grid.WorldToCell(pos + new Vector3(range, 0));
-        Vector3Int bottom=  _grid.WorldToCell(pos + new Vector3(0, -range));
-        Vector3Int top=  _grid.WorldToCell(pos + new Vector3(0, range));
+        Vector3Int left = _grid.WorldToCell(pos + new Vector3(-range, 0));
+        Vector3Int right = _grid.WorldToCell(pos + new Vector3(range, 0));
+        Vector3Int bottom = _grid.WorldToCell(pos + new Vector3(0, -range));
+        Vector3Int top = _grid.WorldToCell(pos + new Vector3(0, range));
 
         int minX = left.x;
         int maxX = right.x;
         int minY = bottom.y;
         int maxY = top.y;
 
-        for(int x = minX; x <= maxX; x++)
+        for (int x = minX; x <= maxX; x++)
         {
-            for(int y = minY; y <= maxY; y++)
+            for (int y = minY; y <= maxY; y++)
             {
                 if (_cells.ContainsKey(new Vector3Int(x, y, 0)) == false)
                     continue;

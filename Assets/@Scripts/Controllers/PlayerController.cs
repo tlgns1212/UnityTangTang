@@ -14,6 +14,10 @@ public class PlayerController : CreatureController
     [SerializeField]
     Transform _fireSocket;
 
+    public Transform Indicator { get { return _indicator; } }
+    public Vector3 FireSocket { get { return _fireSocket.position; } }
+    public Vector3 ShootDir { get { return (_fireSocket.position - _indicator.position).normalized; } }
+
     public Vector2 MoveDir
     {
         get { return _moveDir; }
@@ -28,15 +32,15 @@ public class PlayerController : CreatureController
         _speed = 5.0f;
         Managers.Game.OnMoveDirChanged += HandleOnMoveDirChanged;
 
-        StartProjectile();
-        StartEgoSword();
+        Skills.AddSkill<FireballSkill>(transform.position);
+        Skills.AddSkill<EgoSword>(_indicator.position);
 
         return true;
     }
 
     private void OnDestroy()
     {
-        if(Managers.Game != null)
+        if (Managers.Game != null)
             Managers.Game.OnMoveDirChanged -= HandleOnMoveDirChanged;
     }
 
@@ -55,10 +59,10 @@ public class PlayerController : CreatureController
 
     void MovePlayer()
     {
-        Vector3 dir = _moveDir * _speed *Time.deltaTime;
+        Vector3 dir = _moveDir * _speed * Time.deltaTime;
         transform.position += dir;
 
-        if(_moveDir != Vector2.zero)
+        if (_moveDir != Vector2.zero)
         {
             _indicator.eulerAngles = new Vector3(0, 0, Mathf.Atan2(-dir.x, dir.y) * 180 / Mathf.PI);
         }
@@ -75,7 +79,7 @@ public class PlayerController : CreatureController
             GemController gem = go.GetComponent<GemController>();
 
             Vector3 dir = gem.transform.position - transform.position;
-            if(dir.sqrMagnitude <= sqrCollectDist)
+            if (dir.sqrMagnitude <= sqrCollectDist)
             {
                 Managers.Game.Gem += 1;
                 Managers.Object.Despawn(gem);
@@ -100,46 +104,4 @@ public class PlayerController : CreatureController
         CreatureController cc = attacker as CreatureController;
         cc?.OnDamaged(this, 10000);
     }
-
-    // TEMP
-    #region FireProjectile
-
-    Coroutine _coFireProjectile;
-
-    void StartProjectile()
-    {
-        Debug.Log("Start Coroutine");
-        if (_coFireProjectile != null)
-            StopCoroutine(_coFireProjectile);
-
-        _coFireProjectile = StartCoroutine(CoStartProjectile());
-    }
-
-    IEnumerator CoStartProjectile()
-    {
-        WaitForSeconds wait = new WaitForSeconds(0.5f);
-
-        while (true)
-        {
-            ProjectileController pc = Managers.Object.Spawn<ProjectileController>(_fireSocket.position,1);
-            pc.SetInfo(1, this, (_fireSocket.position - _indicator.position).normalized);
-
-            yield return wait;
-        }
-    }
-    #endregion
-
-    #region EgoSword
-    EgoSwordController _egoSword;
-    void StartEgoSword()
-    {
-        if (_egoSword.IsValid())
-            return;
-
-        _egoSword = Managers.Object.Spawn<EgoSwordController>(_indicator.position, Define.EGO_SWORD_ID);
-        _egoSword.transform.SetParent(_indicator);
-
-        _egoSword.ActivateSkill();
-    }
-    #endregion
 }

@@ -6,12 +6,29 @@ using UnityEngine;
 // FireProjectile: Åõ»çÃ¼
 // PosionField_OA: ¹Ù´Ú
 
-public class SkillController : BaseController
+public class SkillBase : BaseController
 {
+    public CreatureController Owner { get; set; }
     public Define.SkillType SkillType { get; set; }
     public Data.SkillData SkillData { get; protected set; }
 
+    public int SkillLevel { get; set; } = 0;
+    public bool IsLearnSkill { get { return SkillLevel > 0; } }
 
+    public int Damage { get; set; } = 100;
+
+    public SkillBase(Define.SkillType skillType)
+    {
+        SkillType = skillType;
+    }
+
+    public virtual void ActivateSkill() { }
+
+    protected virtual void GenerateProjectile(int templateID, CreatureController owner, Vector3 startPos, Vector3 dir, Vector3 targetPos)
+    {
+        ProjectileController pc = Managers.Object.Spawn<ProjectileController>(startPos, templateID);
+        pc.SetInfo(templateID, owner, dir);
+    }
 
     #region Destroy
     Coroutine _coDestroy;
@@ -24,7 +41,7 @@ public class SkillController : BaseController
 
     public void StopDestroy()
     {
-        if(_coDestroy != null)
+        if (_coDestroy != null)
         {
             StopCoroutine(_coDestroy);
             _coDestroy = null;
